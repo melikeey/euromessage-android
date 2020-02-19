@@ -1,7 +1,6 @@
 package euromsg.com.euromobileandroid.utils;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -11,9 +10,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.PermissionChecker;
 import android.telephony.TelephonyManager;
-
-import androidx.core.content.PermissionChecker;
 
 import java.io.File;
 import java.io.FileOutputStream;

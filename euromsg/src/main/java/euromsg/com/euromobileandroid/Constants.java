@@ -1,8 +1,6 @@
 package euromsg.com.euromobileandroid;
 
-/**
- * Created by ozanuysal on 25/01/15.
- */
+
 public class Constants {
 
     public static final String SDK_VERSION = BuildConfig.VERSION_NAME;
@@ -16,6 +14,6 @@ public class Constants {
     public static final String EURO_SUBSCRIPTION_KEY = "subscription";
 
     public static final String LOG_TAG = "EuroPush";
-    public static final String APPLICATION_KEY = "AppKey";
 
+    public static final String APPLICATION_KEY = "AppKey";
 }

@@ -1,17 +1,13 @@
 package euromsg.com.euromobileandroid.model;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import euromsg.com.euromobileandroid.enums.PushType;
 
-/**
- * Created by ozanuysal on 25/01/15.
- */
 public class Message {
 
     private String mediaUrl;

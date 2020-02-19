@@ -46,6 +46,7 @@ public class EuroMobileManager {
         if (instance == null) {
             instance = new EuroMobileManager(applicationKey);
         }
+
         EuroLogger.debugLog("SharedManager App Key : " + instance.subscription.getAppKey());
         Utils.savePrefString(context, Constants.APPLICATION_KEY, instance.subscription.getAppKey());
 
@@ -130,7 +131,7 @@ public class EuroMobileManager {
      *
      * @param message Message from GCM
      */
-    public void reportReceived(Message message) throws Exception {
+    public void reportReceived(Message message) {
         reportReceived(message.getPushId());
     }
 
@@ -303,13 +304,13 @@ public class EuroMobileManager {
 
     private void setSubscriptionProperty(String key, Object value, Context context) {
 
-      /*  if (Utils.hasPrefString(context, Constants.EURO_SUBSCRIPTION_KEY)) {
+        if (Utils.hasPrefString(context, Constants.EURO_SUBSCRIPTION_KEY)) {
             this.subscription = new Gson().fromJson(Utils.getPrefString(context, Constants.EURO_SUBSCRIPTION_KEY), Subscription.class);
             this.subscription.add(key, value);
 
-        } else {*/
+        } else {
             this.subscription.add(key, value);
-       // }
+        }
     }
 
     /**
