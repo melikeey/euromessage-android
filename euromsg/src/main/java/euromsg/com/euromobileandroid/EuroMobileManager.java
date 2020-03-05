@@ -19,6 +19,7 @@ public class EuroMobileManager {
 
     private static EuroMobileManager instance;
 
+    public Class<?> cls;
     private Subscription subscription = new Subscription();
 
     private EuroMobileManager(String appAlias) {
@@ -121,6 +122,17 @@ public class EuroMobileManager {
             saveSubscription(context);
             ConnectionManager.getInstance().subscribe(subscription);
         }
+    }
+
+    public void setCls(Class<?> cls, Context context) {
+        this.cls = cls;
+        SharedPreference.saveString(context, "cls", cls.getName());
+
+
+    }
+
+    public Class<?> getCls() {
+        return cls;
     }
 
     public void setAppVersion(String appVersion) {

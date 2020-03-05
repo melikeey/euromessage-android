@@ -28,6 +28,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".NotificationEventReceiver" android:exported="true" android:enabled="true"/>
+
     </application>
 
 </manifest>

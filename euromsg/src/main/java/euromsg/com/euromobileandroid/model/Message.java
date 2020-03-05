@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import euromsg.com.euromobileandroid.enums.PushType;
+import euromsg.com.euromobileandroid.notification.ActionElement;
 
 public class Message {
 
@@ -29,6 +30,7 @@ public class Message {
     private String collapseKey;
     private Map<String, String> params = new HashMap<>();
     private ArrayList<Element> elements;
+    public ArrayList<ActionElement> actionElements;
 
     public Message(@NonNull Map<String, String> bundle) {
 
@@ -56,6 +58,15 @@ public class Message {
         if (bundle.get("elements") != null) {
             convertJsonStrToElementsArray(bundle.get("elements"));
         }
+
+        if (bundle.get("actionElement") == null) {
+            actionElements = new ArrayList<>();
+            actionElements.add(new ActionElement("hello","babe"));
+        }
+    }
+
+    public ArrayList<ActionElement> getActionElements() {
+        return actionElements;
     }
 
     private void convertJsonStrToElementsArray(String elementJsonStr) {

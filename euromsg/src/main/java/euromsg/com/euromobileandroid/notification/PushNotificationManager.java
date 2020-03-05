@@ -6,26 +6,35 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.core.app.NotificationCompat;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Map;
 
+import euromsg.com.euromobileandroid.Constants;
+import euromsg.com.euromobileandroid.R;
 import euromsg.com.euromobileandroid.notification.carousel.CarouselBuilder;
 import euromsg.com.euromobileandroid.model.CarouselItem;
 import euromsg.com.euromobileandroid.model.Element;
 import euromsg.com.euromobileandroid.model.Message;
+import euromsg.com.euromobileandroid.notification.carousel.NotificationEvenReceiver;
 import euromsg.com.euromobileandroid.utils.EuroLogger;
 import euromsg.com.euromobileandroid.utils.AppUtils;
 import euromsg.com.euromobileandroid.utils.ImageUtils;
 
 public class PushNotificationManager {
+    private String cls;
 
     private String channelId = "euroChannel";
 
@@ -61,6 +70,58 @@ public class PushNotificationManager {
         } catch (Exception e) {
             EuroLogger.debugLog("Generate notification : " + e.getMessage());
         }
+    }
+
+    public void generateActionNotification(Context context, String cls, Message message) {
+
+        this.cls = cls;
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager != null) {
+            createNotificationChannel(notificationManager, channelId);
+        }
+
+        NotificationCompat.Builder notification = createNotificationBuilder(context, message);
+        notificationManager.notify(1, notification.build());
+    }
+
+    private PendingIntent getPendingIntent(int eventClicked, Context context) {
+        Intent intent = null;
+        try {
+            Class<?> clsCl = Class.forName(cls);
+
+         intent = new Intent(context, clsCl);
+        Bundle bundle = new Bundle();
+        bundle.putInt(  Constants.ITEM_CLICKED, eventClicked);
+        intent.putExtras(bundle);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return PendingIntent.getBroadcast(context, eventClicked, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
+    public NotificationCompat.Builder createNotificationBuilder(Context context, Message message ) {
+
+        PendingIntent left = getPendingIntent(  10, context);
+        PendingIntent right  = getPendingIntent(  20, context);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        return new NotificationCompat.Builder(context, "CHANNEL_1_ID")
+                .setSmallIcon(R.drawable.ic_carousel_icon)
+                .setContentTitle(message.getTitle())
+                .setContentText(message.getMessage())
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.BLUE)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .addAction(R.drawable.ic_launcher, message.getActionElements().get(0).getButtonTitle(), left)
+                    .addAction(R.drawable.ic_launcher, message.getActionElements().get(1).getButtonTitle(), right);
+
     }
 
     public NotificationCompat.Builder createNotificationBuilder(Context context, String contentTitle, String contentText) {
@@ -107,7 +168,7 @@ public class PushNotificationManager {
 
         CharSequence name = "Euro Message Channel";
         String description = "Channel for Euro Message notifications";
-        int importance = android.app.NotificationManager.IMPORTANCE_DEFAULT;
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
         NotificationChannel notificationChannel = new NotificationChannel(channelId, name, importance);
         notificationChannel.setDescription(description);
