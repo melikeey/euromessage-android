@@ -2,6 +2,8 @@ package com.relateddigital.euromessage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
@@ -18,6 +20,7 @@ import com.relateddigital.euromessage.databinding.ActivityMainBinding;
 
 import euromsg.com.euromobileandroid.EuroMobileManager;
 import euromsg.com.euromobileandroid.model.Message;
+import euromsg.com.euromobileandroid.notification.PushNotificationManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,14 +33,19 @@ public class MainActivity extends AppCompatActivity {
 
     String token;
 
+    NotificationManagerCompat notificationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        notificationManager = NotificationManagerCompat.from(this);
+
         initializeEuroMessage();
 
         setReleaseName();
+
+        EuroMobileManager.getInstance().setCls(NotificationEventReceiver.class,this);
 
         mainBinding.btnSync.setOnClickListener(new View.OnClickListener() {
             @Override

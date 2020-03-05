@@ -303,7 +303,7 @@ public class CarouselBuilder {
 
         Intent carouselIntent = new Intent( Constants.CAROUSAL_EVENT_FIRED_INTENT_FILTER);
         Bundle bundle = new Bundle();
-        bundle.putInt(  Constants.EVENT_CAROUSAL_ITEM_CLICKED_KEY,   Constants.EVENT_OTHER_REGION_CLICKED);
+        bundle.putInt(  Constants.ITEM_CLICKED,   Constants.EVENT_OTHER_REGION_CLICKED);
         bundle.putParcelable(  Constants.CAROUSAL_SET_UP_KEY, carouselSetUp);
         carouselIntent.putExtras(bundle);
         PendingIntent pIntent = PendingIntent.getBroadcast(context,   Constants.EVENT_OTHER_REGION_CLICKED, carouselIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -450,9 +450,9 @@ public class CarouselBuilder {
 
     private PendingIntent getPendingIntent(int eventClicked) {
 
-        Intent carouselIntent = new Intent(context, CarouselEventReceiver.class);
+        Intent carouselIntent = new Intent(context, NotificationEvenReceiver.class);
         Bundle bundle = new Bundle();
-        bundle.putInt(  Constants.EVENT_CAROUSAL_ITEM_CLICKED_KEY, eventClicked);
+        bundle.putInt(  Constants.ITEM_CLICKED, eventClicked);
         bundle.putParcelable(  Constants.CAROUSAL_SET_UP_KEY, carouselSetUp);
         carouselIntent.putExtras(bundle);
         return PendingIntent.getBroadcast(context, eventClicked, carouselIntent, PendingIntent.FLAG_UPDATE_CURRENT);
