@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import euromsg.com.euromobileandroid.Constants;
 import euromsg.com.euromobileandroid.model.CarouselSetUp;
@@ -19,9 +20,15 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 
             int event = bundle.getInt(Constants.ITEM_CLICKED);
 
-            if (event > 2) {
+            if (event == 20) {
                 context.startActivity(AppUtils.getLaunchIntent(context, null));
                 context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+                Toast.makeText(context, "Right side click", Toast.LENGTH_LONG).show();
+            } else if (event == 10) {
+                context.startActivity(AppUtils.getLaunchIntent(context, null));
+                context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+                Toast.makeText(context, "Left side click", Toast.LENGTH_LONG).show();
             }
         }
     }

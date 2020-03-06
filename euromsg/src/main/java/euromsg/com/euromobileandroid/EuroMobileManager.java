@@ -127,8 +127,6 @@ public class EuroMobileManager {
     public void setCls(Class<?> cls, Context context) {
         this.cls = cls;
         SharedPreference.saveString(context, "cls", cls.getName());
-
-
     }
 
     public Class<?> getCls() {

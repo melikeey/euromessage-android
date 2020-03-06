@@ -82,8 +82,12 @@ public class PushNotificationManager {
             createNotificationChannel(notificationManager, channelId);
         }
 
-        NotificationCompat.Builder notification = createNotificationBuilder(context, message);
-        notificationManager.notify(1, notification.build());
+        NotificationCompat.Builder notificationBuilder = createNotificationBuilder(context, message);
+
+        notificationBuilder.build().flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(1, notificationBuilder.build());
+
     }
 
     private PendingIntent getPendingIntent(int eventClicked, Context context) {
@@ -91,10 +95,10 @@ public class PushNotificationManager {
         try {
             Class<?> clsCl = Class.forName(cls);
 
-         intent = new Intent(context, clsCl);
-        Bundle bundle = new Bundle();
-        bundle.putInt(  Constants.ITEM_CLICKED, eventClicked);
-        intent.putExtras(bundle);
+            intent = new Intent(context, clsCl);
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constants.ITEM_CLICKED, eventClicked);
+            intent.putExtras(bundle);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -102,25 +106,29 @@ public class PushNotificationManager {
 
     }
 
-    public NotificationCompat.Builder createNotificationBuilder(Context context, Message message ) {
+    public NotificationCompat.Builder createNotificationBuilder(Context context, Message message) {
 
-        PendingIntent left = getPendingIntent(  10, context);
-        PendingIntent right  = getPendingIntent(  20, context);
+        PendingIntent left = getPendingIntent(10, context);
+        PendingIntent right = getPendingIntent(20, context);
+        PendingIntent mid = getPendingIntent(30, context);
+
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        return new NotificationCompat.Builder(context, "CHANNEL_1_ID")
-                .setSmallIcon(R.drawable.ic_carousel_icon)
+        NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(context, channelId);
+
+
+                notificationBuilder.setSmallIcon(R.drawable.ic_carousel_icon)
                 .setContentTitle(message.getTitle())
                 .setContentText(message.getMessage())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(Color.BLUE)
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .addAction(R.drawable.ic_launcher, message.getActionElements().get(0).getButtonTitle(), left)
-                    .addAction(R.drawable.ic_launcher, message.getActionElements().get(1).getButtonTitle(), right);
+                .addAction(R.drawable.ic_launcher, message.getActionElements().get(1).getButtonTitle(), right)
+                .addAction(0, message.getActionElements().get(2).getButtonTitle(), mid);
+
+        return notificationBuilder;
 
     }
 
@@ -156,7 +164,8 @@ public class PushNotificationManager {
                 .setStyle(style)
                 .setLargeIcon(largeIcon)
                 .setContentTitle(title)
-                .setColorized(false).setAutoCancel(true)
+                .setColorized(false)
+                .setAutoCancel(true)
                 .setContentText(pushMessage.getMessage());
         mBuilder.setContentIntent(contentIntent);
 
