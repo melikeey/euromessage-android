@@ -20,6 +20,7 @@ import com.relateddigital.euromessage.databinding.ActivityMainBinding;
 
 import euromsg.com.euromobileandroid.EuroMobileManager;
 import euromsg.com.euromobileandroid.connection.ConnectionManager;
+import euromsg.com.euromobileandroid.enums.PushType;
 import euromsg.com.euromobileandroid.model.Message;
 import euromsg.com.euromobileandroid.notification.PushNotificationManager;
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static EuroMobileManager euroMobileManager;
 
-    public static String APP_ALIAS = Constants.APP_ALIAS;
+    public static String APP_ALIAS =  Constants.APP_ALIAS;
 
     ActivityMainBinding mainBinding;
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         euroMobileManager.registerToFCM(getBaseContext());
 
-        euroMobileManager.setNotificationActionReceiver(NotificationEventReceiver.class, this);
+        euroMobileManager.setNotificationOpenHandler(new ExampleEuroMobileNotificationHandler());
 
     }
 
@@ -135,9 +136,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                PushNotificationManager pushNotificationManager = new PushNotificationManager();
                 Message message = new Gson().fromJson(TestPush.testText, Message.class);
-                pushNotificationManager.generateNotification(getApplicationContext(), message, null);
+                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Text);
             }
         });
 
@@ -145,18 +145,16 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PushNotificationManager pushNotificationManager = new PushNotificationManager();
                 Message message = new Gson().fromJson(TestPush.testImage, Message.class);
-                pushNotificationManager.generateNotification(getApplicationContext(), message, ConnectionManager.getInstance().getBitMapFromUri((message.getMediaUrl())));
+                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Image);
             }
         });
 
         mainBinding.btnCarousel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PushNotificationManager pushNotificationManager = new PushNotificationManager();
                 Message message = new Gson().fromJson(TestPush.testCarousel, Message.class);
-                pushNotificationManager.generateCarouselNotification(getApplicationContext(), message);
+                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Carousel);
 
             }
         });
@@ -164,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PushNotificationManager pushNotificationManager = new PushNotificationManager();
                 Message message = new Gson().fromJson(TestPush.actionPush, Message.class);
-                pushNotificationManager.generateActionNotification(getApplicationContext(),"com.relateddigital.euromessage.NotificationEventReceiver", message);
+                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Action);
             }
         });
     }
 }
+

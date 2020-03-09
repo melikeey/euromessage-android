@@ -1,6 +1,5 @@
 package euromsg.com.euromobileandroid;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,21 +13,24 @@ import euromsg.com.euromobileandroid.model.Location;
 import euromsg.com.euromobileandroid.model.Message;
 import euromsg.com.euromobileandroid.model.Retention;
 import euromsg.com.euromobileandroid.model.Subscription;
+import euromsg.com.euromobileandroid.notification.EuroMobileNotificationHandler;
 import euromsg.com.euromobileandroid.utils.EuroLogger;
 import euromsg.com.euromobileandroid.utils.SharedPreference;
 import euromsg.com.euromobileandroid.utils.AppUtils;
 
 public class EuroMobileManager {
 
-    public static int LEFT = 10;
-    public static int RIGHT = 20;
-    public static int MEDIUM = 30;
-    static int event;
+
+    public enum Type {
+        ACTION_LEFT, ACTION_RIGHT, ACTION_MID, CAROUSEL_LEFT_ITEM, CAROUSEL_RIGHT_ITEM, OTHER
+    }
+
     public static Context context;
 
     private static EuroMobileManager instance;
 
-    public Class<?> cls;
+    private static EuroMobileNotificationHandler euroMobileNotificationHandler;
+
     private Subscription subscription = new Subscription();
 
     private EuroMobileManager(String appAlias) {
@@ -58,36 +60,31 @@ public class EuroMobileManager {
         return instance;
     }
 
-
     public static EuroMobileManager getInstance() {
         return instance;
     }
 
-    public static void setAction(Intent intent, Context context) {
+    public static Type getEvent(Intent intent) {
+
         Bundle bundle = intent.getExtras();
 
-        event = bundle.getInt(Constants.ITEM_CLICKED);
-        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancelAll();
-    }
+        int event = bundle.getInt(Constants.ITEM_CLICKED);
 
-    public static int getAction() {
-        return event;
-    }
+        switch (event) {
 
-    public static boolean getRight() {
-        if (EuroMobileManager.getAction() == EuroMobileManager.RIGHT)
-            return true;
-        return false;
-    }
+            case Constants.EVENT_LEFT_ITEM_CLICKED:
+                return Type.CAROUSEL_LEFT_ITEM;
+            case Constants.EVENT_RIGHT_ITEM_CLICKED:
+                return Type.CAROUSEL_RIGHT_ITEM;
+            case Constants.ACTION_LEFT:
+                return Type.ACTION_LEFT;
+            case Constants.ACTION_MID:
+                return Type.ACTION_MID;
+            case Constants.ACTION_RIGHT:
+                return Type.ACTION_RIGHT;
 
-    public static boolean getLeft() {
-        if (EuroMobileManager.getAction() == EuroMobileManager.LEFT)
-            return true;
-
-        return false;
-
+        }
+        return Type.OTHER;
     }
 
     /**
@@ -161,13 +158,13 @@ public class EuroMobileManager {
         }
     }
 
-    public void setNotificationActionReceiver(Class<?> cls, Context context) {
-        this.cls = cls;
-        SharedPreference.saveString(context, "cls", cls.getName());
+    public void setNotificationOpenHandler(EuroMobileNotificationHandler euroMobileNotificationHandler) {
+        this.euroMobileNotificationHandler = euroMobileNotificationHandler;
+
     }
 
-    public Class<?> getCls() {
-        return cls;
+    public static EuroMobileNotificationHandler getEuroMobileNotificationHandler() {
+        return euroMobileNotificationHandler;
     }
 
     public void setAppVersion(String appVersion) {

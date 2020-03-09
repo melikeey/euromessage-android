@@ -1,4 +1,4 @@
-package euromsg.com.euromobileandroid.notification;
+package euromsg.com.euromobileandroid.model;
 
 public class ActionElement {
 

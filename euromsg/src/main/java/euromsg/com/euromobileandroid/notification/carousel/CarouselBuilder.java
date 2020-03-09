@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +19,7 @@ import androidx.core.app.NotificationCompat;
 import java.util.ArrayList;
 
 import euromsg.com.euromobileandroid.Constants;
+import euromsg.com.euromobileandroid.notification.NotificationEventReceiver;
 import euromsg.com.euromobileandroid.R;
 import euromsg.com.euromobileandroid.connection.ImageDownloaderManager;
 import euromsg.com.euromobileandroid.model.CarouselItem;
@@ -275,13 +275,8 @@ public class CarouselBuilder {
 
             NotificationManager mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            PushNotificationManager pushNotificationManager = new PushNotificationManager();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mNotifyManager != null) {
-                pushNotificationManager.createNotificationChannel(mNotifyManager, channelId);
-            }
-
-            mBuilder = pushNotificationManager.createNotificationBuilder(context, contentTitle, contentText);
+            mBuilder = PushNotificationManager.createCarouselNotificationBuilder(contentTitle, contentText);
 
             if (isOtherRegionClickable) {
                 setOtherRegionClickable();
@@ -450,7 +445,7 @@ public class CarouselBuilder {
 
     private PendingIntent getPendingIntent(int eventClicked) {
 
-        Intent carouselIntent = new Intent(context, NotificationEvenReceiver.class);
+        Intent carouselIntent = new Intent(context, NotificationEventReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putInt(  Constants.ITEM_CLICKED, eventClicked);
         bundle.putParcelable(  Constants.CAROUSAL_SET_UP_KEY, carouselSetUp);
@@ -512,7 +507,7 @@ public class CarouselBuilder {
         //ToDo :  delete all cache files
     }
 
-    void handleClickEvent(int clickEvent, CarouselSetUp setUp) {
+  public  void handleClickEvent(int clickEvent, CarouselSetUp setUp) {
 
           verifyAndSetUpVariables(setUp);
 

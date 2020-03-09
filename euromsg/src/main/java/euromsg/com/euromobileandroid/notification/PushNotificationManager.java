@@ -17,108 +17,152 @@ import android.text.TextUtils;
 
 import androidx.core.app.NotificationCompat;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 import euromsg.com.euromobileandroid.Constants;
 import euromsg.com.euromobileandroid.R;
+import euromsg.com.euromobileandroid.connection.ConnectionManager;
+import euromsg.com.euromobileandroid.enums.PushType;
 import euromsg.com.euromobileandroid.notification.carousel.CarouselBuilder;
 import euromsg.com.euromobileandroid.model.CarouselItem;
 import euromsg.com.euromobileandroid.model.Element;
 import euromsg.com.euromobileandroid.model.Message;
-import euromsg.com.euromobileandroid.notification.carousel.NotificationEvenReceiver;
-import euromsg.com.euromobileandroid.utils.EuroLogger;
 import euromsg.com.euromobileandroid.utils.AppUtils;
 import euromsg.com.euromobileandroid.utils.ImageUtils;
 
 public class PushNotificationManager {
-    private String cls;
 
-    Context context;
+    private static String channelId = "euroChannel";
 
-    private String channelId = "euroChannel";
+    private static Context mContext;
 
-    public void generateCarouselNotification(Context context, Message pushMessage) {
+    public static void generateNotification(Context context, Message pushMessage, PushType pushType) {
 
-        ArrayList<Element> elements = pushMessage.getElements();
+        NotificationCompat.Builder mBuilder;
 
-        CarouselBuilder carouselBuilder = CarouselBuilder.with(context).beginTransaction();
-        carouselBuilder.setContentTitle(pushMessage.getTitle()).setContentText(pushMessage.getMessage());
+        mContext = context;
 
-        for (Element item : elements) {
-            CarouselItem cItem = new CarouselItem(item.getId(), item.getTitle(), item.getContent(), item.getPicture());
-            carouselBuilder.addCarouselItem(cItem);
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        createNotificationChannel(notificationManager, channelId);
+
+
+        switch (pushType) {
+            case Text:
+
+                mBuilder = createNotificationBuilder(null, pushMessage);
+
+                notificationManager.notify(12, mBuilder.build());
+
+                break;
+
+
+            case Image:
+
+                Bitmap image = ConnectionManager.getInstance().getBitMapFromUri(pushMessage.getMediaUrl());
+
+                mBuilder = createNotificationBuilder(image, pushMessage);
+
+                notificationManager.notify(12, mBuilder.build());
+
+                break;
+
+
+            case Action:
+
+                mBuilder  = createActionNotificationBuilder(pushMessage);
+                notificationManager.notify(1, mBuilder.build());
+
+                break;
+
+            case Carousel:
+
+                ArrayList<Element> elements = pushMessage.getElements();
+
+                CarouselBuilder carouselBuilder = CarouselBuilder.with(mContext).beginTransaction();
+                carouselBuilder.setContentTitle(pushMessage.getTitle()).setContentText(pushMessage.getMessage());
+
+                for (Element item : elements) {
+                    CarouselItem cItem = new CarouselItem(item.getId(), item.getTitle(), item.getContent(), item.getPicture());
+                    carouselBuilder.addCarouselItem(cItem);
+                }
+                carouselBuilder.setOtherRegionClickable(true);
+                carouselBuilder.buildCarousel();
+
+                break;
         }
-        carouselBuilder.setOtherRegionClickable(true);
-        carouselBuilder.buildCarousel();
+
     }
 
-    public void generateNotification(Context context, Message pushMessage, Bitmap image) {
-
-        try {
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
-
-            NotificationCompat.Builder mBuilder = createNotificationBuilder(context, image, pushMessage, contentIntent);
-            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mNotificationManager != null) {
-                createNotificationChannel(mNotificationManager, channelId);
-            }
-
-            mNotificationManager.notify(12, mBuilder.build());
-
-        } catch (Exception e) {
-            EuroLogger.debugLog("Generate notification : " + e.getMessage());
-        }
-    }
-
-    public void generateActionNotification(Context context, String cls, Message message) {
-
-        this.cls = cls;
-        this.context = context;
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+    @TargetApi(Build.VERSION_CODES.O)
+    public static void createNotificationChannel(NotificationManager notificationManager, String channelId) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager != null) {
-            createNotificationChannel(notificationManager, channelId);
+
+            CharSequence name = "Euro Message Channel";
+            String description = "Channel for Euro Message notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, name, importance);
+            notificationChannel.setDescription(description);
+            notificationChannel.setShowBadge(true);
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+            notificationManager.createNotificationChannel(notificationChannel);
         }
-
-        NotificationCompat.Builder notificationBuilder = createNotificationBuilder(message);
-
-        notificationBuilder.build().flags |= Notification.FLAG_AUTO_CANCEL;
-
-        notificationManager.notify(1, notificationBuilder.build());
-
     }
 
-    private PendingIntent getPendingIntent(int eventClicked) {
-        Intent intent = null;
-        try {
-            Class<?> clsCl = Class.forName(cls);
+    public static NotificationCompat.Builder createCarouselNotificationBuilder(String contentTitle, String contentText) {
 
-            intent = new Intent(context, clsCl);
-            Bundle bundle = new Bundle();
-            bundle.putInt(Constants.ITEM_CLICKED, eventClicked);
-            intent.putExtras(bundle);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return PendingIntent.getBroadcast(context, eventClicked, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(mContext, channelId);
+        mBuilder.setContentTitle(contentTitle)
+                .setContentText(contentText)
+                .setSmallIcon(ImageUtils.getAppIcon(mContext))
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
+                .setAutoCancel(true);
 
+        return mBuilder;
     }
 
-    public NotificationCompat.Builder createNotificationBuilder(Message message) {
+    private static NotificationCompat.Builder createNotificationBuilder(Bitmap pushImage, Message pushMessage) {
 
-        NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(context, channelId);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, AppUtils.getLaunchIntent(mContext, null), PendingIntent.FLAG_UPDATE_CURRENT);
 
+        String title = TextUtils.isEmpty(pushMessage.getTitle()) ? AppUtils.getAppLabel(mContext, "") : pushMessage.getTitle();
+        Bitmap largeIcon = BitmapFactory.decodeResource(mContext.getResources(),
+                ImageUtils.getAppIcon(mContext));
 
-        for (int i = 0; i<message.getActionElements().size(); i++) {
+        NotificationCompat.Style style = pushImage == null ?
+                new NotificationCompat.BigTextStyle().bigText(pushMessage.getMessage()) :
+                new NotificationCompat.BigPictureStyle().bigPicture(pushImage).setSummaryText(pushMessage.getMessage());
 
-            addAction(notificationBuilder, R.drawable.ic_launcher, message.getActionElements().get(i).getButtonTitle(), (i+1)*10);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, channelId)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
+                .setSmallIcon(ImageUtils.getAppIcon(mContext))
+                .setStyle(style)
+                .setLargeIcon(largeIcon)
+                .setContentTitle(title)
+                .setColorized(false)
+                .setAutoCancel(true)
+                .setContentText(pushMessage.getMessage());
+        mBuilder.setContentIntent(contentIntent);
+
+        return mBuilder;
+    }
+
+    public static NotificationCompat.Builder createActionNotificationBuilder(Message message) {
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext, channelId);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, AppUtils.getLaunchIntent(mContext, null), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        for (int i = 0; i < message.getActionElements().size(); i++) {
+
+            addAction(notificationBuilder, R.drawable.ic_launcher, message.getActionElements().get(i).getButtonTitle(), (i + 1) * 10);
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_carousel_icon)
@@ -131,65 +175,21 @@ public class PushNotificationManager {
 
     }
 
-    private void addAction(NotificationCompat.Builder notificationBuilder ,int logo, String buttonTitle, int eventClicked) {
+    private static void addAction(NotificationCompat.Builder notificationBuilder, int logo, String buttonTitle, int eventClicked) {
         notificationBuilder.addAction(R.drawable.ic_launcher, buttonTitle, getPendingIntent(eventClicked));
 
     }
 
-    public NotificationCompat.Builder createNotificationBuilder(Context context, String contentTitle, String contentText) {
+    private static PendingIntent getPendingIntent(int eventClicked) {
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, channelId);
-        mBuilder.setContentTitle(contentTitle)
-                .setContentText(contentText)
-                .setSmallIcon(ImageUtils.getAppIcon(context))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
-                .setAutoCancel(true);
+        Intent intent;
 
-        return mBuilder;
-    }
+        intent = new Intent(mContext, NotificationEventReceiver.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.ITEM_CLICKED, eventClicked);
+        intent.putExtras(bundle);
 
-    private NotificationCompat.Builder createNotificationBuilder(Context context,
-                                                                 Bitmap pushImage, Message pushMessage, PendingIntent contentIntent) {
+        return PendingIntent.getBroadcast(mContext, eventClicked, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String title = TextUtils.isEmpty(pushMessage.getTitle()) ? AppUtils.getAppLabel(context, "") : pushMessage.getTitle();
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(),
-                ImageUtils.getAppIcon(context));
-
-        NotificationCompat.Style style = pushImage == null ?
-                new NotificationCompat.BigTextStyle().bigText(pushMessage.getMessage()) :
-                new NotificationCompat.BigPictureStyle().bigPicture(pushImage).setSummaryText(pushMessage.getMessage());
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
-                .setSmallIcon(ImageUtils.getAppIcon(context))
-                .setStyle(style)
-                .setLargeIcon(largeIcon)
-                .setContentTitle(title)
-                .setColorized(false)
-                .setAutoCancel(true)
-                .setContentText(pushMessage.getMessage());
-        mBuilder.setContentIntent(contentIntent);
-
-        return mBuilder;
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    public void createNotificationChannel(NotificationManager notificationManager, String channelId) {
-
-        CharSequence name = "Euro Message Channel";
-        String description = "Channel for Euro Message notifications";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-        NotificationChannel notificationChannel = new NotificationChannel(channelId, name, importance);
-        notificationChannel.setDescription(description);
-        notificationChannel.setShowBadge(true);
-        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        notificationChannel.enableVibration(true);
-        notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-
-        notificationManager.createNotificationChannel(notificationChannel);
     }
 }

@@ -29,8 +29,6 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".NotificationEventReceiver" android:exported="true" android:enabled="true"/>
-
     </application>
 
 </manifest>

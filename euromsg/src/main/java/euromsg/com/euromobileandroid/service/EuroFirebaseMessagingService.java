@@ -13,6 +13,7 @@ import euromsg.com.euromobileandroid.Constants;
 import euromsg.com.euromobileandroid.EuroMobileManager;
 
 import euromsg.com.euromobileandroid.connection.ConnectionManager;
+import euromsg.com.euromobileandroid.enums.PushType;
 import euromsg.com.euromobileandroid.model.Message;
 import euromsg.com.euromobileandroid.notification.PushNotificationManager;
 import euromsg.com.euromobileandroid.utils.EuroLogger;
@@ -62,31 +63,12 @@ public class EuroFirebaseMessagingService extends FirebaseMessagingService {
 
         Message pushMessage = new Gson().fromJson(title, Message.class);
 
-
         EuroLogger.debugLog("Message received : " + pushMessage.getMessage());
 
-        switch (pushMessage.getPushType()) {
+        PushNotificationManager.generateNotification(this, pushMessage, pushMessage.getPushType());
 
-            case Image:
-                if (pushMessage.getElements() != null) {
+        String appAlias = SharedPreference.getString(this, Constants.APP_ALIAS);
 
-                    pushNotificationManager.generateCarouselNotification(this, pushMessage);
-                } else
-                    pushNotificationManager.generateNotification(this, pushMessage, ConnectionManager.getInstance().getBitMapFromUri(pushMessage.getMediaUrl()));
-                break;
-
-            case Text:
-                pushNotificationManager.generateNotification(this, pushMessage, null);
-
-                break;
-
-            case Action:
-
-                pushNotificationManager.generateActionNotification(this, SharedPreference.getString(this, "cls"), pushMessage );
-        }
-
-        String applicationKey = SharedPreference.getString(this, Constants.APP_ALIAS);
-
-        EuroMobileManager.createInstance(applicationKey, this).reportReceived(pushMessage.getPushId());
+        EuroMobileManager.createInstance(appAlias, this).reportReceived(pushMessage.getPushId());
     }
 }

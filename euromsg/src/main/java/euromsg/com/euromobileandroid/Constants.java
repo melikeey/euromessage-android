@@ -30,4 +30,8 @@ public class Constants {
     public static final String CAROUSAL_LARGE_ICON_FILE_NAME = "largeIconCarousel";
     public static final String CAROUSAL_PLACEHOLDER_ICON_FILE_NAME = "placeHolderIconCarousel";
 
+    public static final int ACTION_LEFT = 10;
+    public static final int ACTION_MID = 20;
+    public static final int ACTION_RIGHT = 30;
+
 }

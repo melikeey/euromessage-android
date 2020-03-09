@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import euromsg.com.euromobileandroid.enums.PushType;
-import euromsg.com.euromobileandroid.notification.ActionElement;
 
 public class Message {
 
