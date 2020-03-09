@@ -1,6 +1,9 @@
 package euromsg.com.euromobileandroid;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
@@ -16,6 +19,12 @@ import euromsg.com.euromobileandroid.utils.SharedPreference;
 import euromsg.com.euromobileandroid.utils.AppUtils;
 
 public class EuroMobileManager {
+
+    public static int LEFT = 10;
+    public static int RIGHT = 20;
+    public static int MEDIUM = 30;
+    static int event;
+    public static Context context;
 
     private static EuroMobileManager instance;
 
@@ -35,6 +44,7 @@ public class EuroMobileManager {
 
     /**
      * Initiator method
+     *
      * @param appAlias Application key from Euromsg. Euromsg will give you this key.
      */
     public static EuroMobileManager createInstance(String appAlias, Context context) {
@@ -42,15 +52,42 @@ public class EuroMobileManager {
         if (instance == null) {
             instance = new EuroMobileManager(appAlias);
         }
-
         EuroLogger.debugLog("SharedManager App Key : " + instance.subscription.getAppAlias());
         SharedPreference.saveString(context, Constants.APP_ALIAS, instance.subscription.getAppAlias());
 
         return instance;
     }
 
+
     public static EuroMobileManager getInstance() {
         return instance;
+    }
+
+    public static void setAction(Intent intent, Context context) {
+        Bundle bundle = intent.getExtras();
+
+        event = bundle.getInt(Constants.ITEM_CLICKED);
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancelAll();
+    }
+
+    public static int getAction() {
+        return event;
+    }
+
+    public static boolean getRight() {
+        if (EuroMobileManager.getAction() == EuroMobileManager.RIGHT)
+            return true;
+        return false;
+    }
+
+    public static boolean getLeft() {
+        if (EuroMobileManager.getAction() == EuroMobileManager.LEFT)
+            return true;
+
+        return false;
+
     }
 
     /**
@@ -124,7 +161,7 @@ public class EuroMobileManager {
         }
     }
 
-    public void setCls(Class<?> cls, Context context) {
+    public void setNotificationActionReceiver(Class<?> cls, Context context) {
         this.cls = cls;
         SharedPreference.saveString(context, "cls", cls.getName());
     }
@@ -203,7 +240,7 @@ public class EuroMobileManager {
 
     private void setSubscriptionProperty(String key, Object value, Context context) {
 
-     if (SharedPreference.hasString(context, Constants.EURO_SUBSCRIPTION_KEY)) {
+        if (SharedPreference.hasString(context, Constants.EURO_SUBSCRIPTION_KEY)) {
             this.subscription = new Gson().fromJson(SharedPreference.getString(context, Constants.EURO_SUBSCRIPTION_KEY), Subscription.class);
             this.subscription.add(key, value);
 
