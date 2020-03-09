@@ -36,6 +36,8 @@ import euromsg.com.euromobileandroid.utils.ImageUtils;
 public class PushNotificationManager {
     private String cls;
 
+    Context context;
+
     private String channelId = "euroChannel";
 
     public void generateCarouselNotification(Context context, Message pushMessage) {
@@ -75,6 +77,8 @@ public class PushNotificationManager {
     public void generateActionNotification(Context context, String cls, Message message) {
 
         this.cls = cls;
+        this.context = context;
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 
@@ -82,7 +86,7 @@ public class PushNotificationManager {
             createNotificationChannel(notificationManager, channelId);
         }
 
-        NotificationCompat.Builder notificationBuilder = createNotificationBuilder(context, message);
+        NotificationCompat.Builder notificationBuilder = createNotificationBuilder(message);
 
         notificationBuilder.build().flags |= Notification.FLAG_AUTO_CANCEL;
 
@@ -90,7 +94,7 @@ public class PushNotificationManager {
 
     }
 
-    private PendingIntent getPendingIntent(int eventClicked, Context context) {
+    private PendingIntent getPendingIntent(int eventClicked) {
         Intent intent = null;
         try {
             Class<?> clsCl = Class.forName(cls);
@@ -106,29 +110,29 @@ public class PushNotificationManager {
 
     }
 
-    public NotificationCompat.Builder createNotificationBuilder(Context context, Message message) {
+    public NotificationCompat.Builder createNotificationBuilder(Message message) {
 
-        PendingIntent left = getPendingIntent(10, context);
-        PendingIntent right = getPendingIntent(20, context);
-        PendingIntent mid = getPendingIntent(30, context);
-
+        NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(context, channelId);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(context, channelId);
+        for (int i = 0; i<message.getActionElements().size(); i++) {
 
+            addAction(notificationBuilder, R.drawable.ic_launcher, message.getActionElements().get(i).getButtonTitle(), (i+1)*10);
+        }
 
-                notificationBuilder.setSmallIcon(R.drawable.ic_carousel_icon)
+        notificationBuilder.setSmallIcon(R.drawable.ic_carousel_icon)
                 .setContentTitle(message.getTitle())
                 .setContentText(message.getMessage())
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setColor(Color.BLUE)
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .addAction(R.drawable.ic_launcher, message.getActionElements().get(1).getButtonTitle(), right)
-                .addAction(0, message.getActionElements().get(2).getButtonTitle(), mid);
+                .setContentIntent(contentIntent).setAutoCancel(true);
 
         return notificationBuilder;
+
+    }
+
+    private void addAction(NotificationCompat.Builder notificationBuilder ,int logo, String buttonTitle, int eventClicked) {
+        notificationBuilder.addAction(R.drawable.ic_launcher, buttonTitle, getPendingIntent(eventClicked));
 
     }
 

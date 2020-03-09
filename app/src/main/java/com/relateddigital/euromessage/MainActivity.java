@@ -2,13 +2,11 @@ package com.relateddigital.euromessage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -50,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
         initializeEuroMessage();
 
         setUI();
-
-        EuroMobileManager.getInstance().setCls(NotificationEventReceiver.class,this);
-
     }
 
     @Override
@@ -69,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         euroMobileManager = EuroMobileManager.createInstance(APP_ALIAS, this);
 
         euroMobileManager.registerToFCM(getBaseContext());
+
+        euroMobileManager.setNotificationActionReceiver(NotificationEventReceiver.class, this);
+
     }
 
     private void setUI() {
@@ -160,6 +158,15 @@ public class MainActivity extends AppCompatActivity {
                 Message message = new Gson().fromJson(TestPush.testCarousel, Message.class);
                 pushNotificationManager.generateCarouselNotification(getApplicationContext(), message);
 
+            }
+        });
+
+        mainBinding.btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PushNotificationManager pushNotificationManager = new PushNotificationManager();
+                Message message = new Gson().fromJson(TestPush.actionPush, Message.class);
+                pushNotificationManager.generateActionNotification(getApplicationContext(),"com.relateddigital.euromessage.NotificationEventReceiver", message);
             }
         });
     }

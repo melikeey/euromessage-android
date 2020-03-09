@@ -56,4 +56,29 @@ public class TestPush {
             "        }\n" +
             "    ]\n" +
             "}";
+
+
+
+    public static String actionPush = "{\n" +
+            "    \"pushType\": \"Action\",\n" +
+            "    \"url\": \"http://www.google.com.tr\",\n" +
+            "    \"mediaUrl\": \"\",\n" +
+            "    \"pushId\": \"bea5303f-11aa-4ac7-aae8-2265ba63b535\",\n" +
+            "    \"altUrl\": \"\",\n" +
+            "    \"sound\": \"default\",\n" +
+            "    \"message\": \"Sepetinizde ürün var Alışverişe Devam edin\",\n" +
+            "    \"title\": \"Dikkat\",\n" +
+            "    \"actionElements\": [{\n" +
+            "            \"id\": \"1\",\n" +
+            "            \"buttonTitle\": \"Tamam\"\n" +
+            "        }, {\n" +
+            "             \"id\": \"2\",\n" +
+            "            \"buttonTitle\": \"Şimdilik İstemiyorum\"\n" +
+            "        }, {\n" +
+        "             \"id\": \"3\",\n" +
+                "            \"buttonTitle\": \"Başka Ürünler Ekle\"\n" +
+                "        }\n" +
+            "    ]\n" +
+            "}";
+
 }
