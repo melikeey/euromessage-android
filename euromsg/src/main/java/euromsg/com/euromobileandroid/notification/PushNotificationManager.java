@@ -48,9 +48,7 @@ public class PushNotificationManager {
 
                 mBuilder = createNotificationBuilder(null, pushMessage, context);
 
-                if (notificationManager != null) {
-                    notificationManager.notify(12, mBuilder.build());
-                }
+                notificationManager.notify(12, mBuilder.build());
 
                 break;
 
@@ -160,20 +158,21 @@ public class PushNotificationManager {
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
 
         for (int i = 0; i < message.getActionElements().size(); i++) {
-            addAction(notificationBuilder, R.drawable.ic_launcher, message.getActionElements().get(i).getButtonTitle(), (i + 1) * 10, context);
+            addAction(notificationBuilder, message.getActionElements().get(i).getButtonTitle(), (i + 1) * 10, context);
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_carousel_icon)
                 .setContentTitle(message.getTitle())
                 .setContentText(message.getMessage())
-                .setColor(Color.BLUE)
+                .setColor(Color.BLACK)
                 .setContentIntent(contentIntent).setAutoCancel(true);
 
         return notificationBuilder;
     }
 
-    private static void addAction(NotificationCompat.Builder notificationBuilder, int logo, String buttonTitle, int eventClicked, Context context) {
-        notificationBuilder.addAction(R.drawable.ic_launcher, buttonTitle, getPendingIntent(eventClicked, context));
+    private static void addAction(NotificationCompat.Builder notificationBuilder, String buttonTitle, int eventClicked, Context context) {
+
+        notificationBuilder.addAction(android.R.drawable.star_off, buttonTitle, getPendingIntent(eventClicked, context));
     }
 
     private static PendingIntent getPendingIntent(int eventClicked, Context context) {

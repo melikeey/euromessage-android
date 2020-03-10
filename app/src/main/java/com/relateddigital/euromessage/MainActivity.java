@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUI() {
 
-        sendATemplatePush();
+        sendATemplateTestPush();
 
         setReleaseName();
 
@@ -126,17 +126,15 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.tvRelease.setText("Appv : " + BuildConfig.VERSION_NAME + " " + " EM SDKv: " + libVersionName);
     }
 
-    public void sendATemplatePush() {
+    public void sendATemplateTestPush() {
 
         mainBinding.btnText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Message message = new Gson().fromJson(TestPush.testText, Message.class);
                 PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Text);
             }
         });
-
 
         mainBinding.btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message message = new Gson().fromJson(TestPush.actionPush, Message.class);
+                Message message = new Gson().fromJson(TestPush.testAction, Message.class);
                 PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Action);
             }
         });

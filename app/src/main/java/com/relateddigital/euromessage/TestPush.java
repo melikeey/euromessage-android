@@ -22,7 +22,7 @@ public class TestPush {
             "    \"pushId\": \"bea5303f-11aa-4ac7-aae8-2265ba63b535\",\n" +
             "    \"altUrl\": \"\",\n" +
             "    \"sound\": \"default\",\n" +
-            "    \"message\": \"Buzdolabı, Soğutucu\",\n" +
+            "    \"message\": \"Buzdolabı, Soğutucu Almanın Tam Sırası\",\n" +
             "    \"title\": \"BUGÜNE ÖZEL 150 TL İNDİRİM\"\n" +
             "\n" +
             "}";
@@ -33,8 +33,8 @@ public class TestPush {
             "    \"pushId\": \"bea5303f-11aa-4ac7-aae8-2265ba63b535\",\n" +
             "    \"altUrl\": \"\",\n" +
             "    \"sound\": \"default\",\n" +
-            "    \"message\": \"test carousel omer\",\n" +
-            "    \"title\": \"test carousel omer\",\n" +
+            "    \"message\": \"Akıllı saatlerde göz alıcı kampanya\",\n" +
+            "    \"title\": \"İndirim Alarmı\",\n" +
             "    \"elements\": [{\n" +
             "            \"id\": 1,\n" +
             "            \"title\": \"Süper İndirim\",\n" +
@@ -59,24 +59,24 @@ public class TestPush {
 
 
 
-    public static String actionPush = "{\n" +
+    public static String testAction = "{\n" +
             "    \"pushType\": \"Action\",\n" +
             "    \"url\": \"http://www.google.com.tr\",\n" +
             "    \"mediaUrl\": \"\",\n" +
             "    \"pushId\": \"bea5303f-11aa-4ac7-aae8-2265ba63b535\",\n" +
             "    \"altUrl\": \"\",\n" +
             "    \"sound\": \"default\",\n" +
-            "    \"message\": \"Sepetinizde ürün var Alışverişe Devam edin\",\n" +
-            "    \"title\": \"Dikkat\",\n" +
+            "    \"message\": \"Sepetinizde ürünler var. Haydi siparişi tamamla..\",\n" +
+            "    \"title\": \"Bil bakalım. Ne farkettik! :) \",\n" +
             "    \"actionElements\": [{\n" +
             "            \"id\": \"1\",\n" +
-            "            \"buttonTitle\": \"Tamamlama\"\n" +
+            "            \"buttonTitle\": \"Tamamla\"\n" +
             "        }, {\n" +
             "             \"id\": \"2\",\n" +
-            "            \"buttonTitle\": \"Bitirmelik\"\n" +
+            "            \"buttonTitle\": \"Ürünlere Bak\"\n" +
             "        }, {\n" +
         "             \"id\": \"3\",\n" +
-                "            \"buttonTitle\": \"Yoketmelik\"\n" +
+                "            \"buttonTitle\": \"Sonra\"\n" +
                 "        }\n" +
             "    ]\n" +
             "}";
