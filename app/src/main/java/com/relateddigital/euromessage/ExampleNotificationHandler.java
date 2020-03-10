@@ -1,19 +1,21 @@
 package com.relateddigital.euromessage;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import euromsg.com.euromobileandroid.EuroMobileManager;
 import euromsg.com.euromobileandroid.notification.EuroMobileNotificationHandler;
 
-public class ExampleEuroMobileNotificationHandler implements EuroMobileNotificationHandler {
+public class ExampleNotificationHandler implements EuroMobileNotificationHandler {
 
     @Override
-    public void onNotificationClicked(Intent intent) {
+    public void onNotificationClicked(Intent intent, Context context) {
 
         switch (EuroMobileManager.getEvent(intent)) {
 
             case ACTION_MID:
+
                 Log.e("Mid action", "mid");
 
                 break;

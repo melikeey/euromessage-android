@@ -24,7 +24,7 @@ class NotificationEventProcessor {
         }
 
         if (EuroMobileManager.getEuroMobileNotificationHandler() != null) {
-            EuroMobileManager.getEuroMobileNotificationHandler().onNotificationClicked(intent);
+            EuroMobileManager.getEuroMobileNotificationHandler().onNotificationClicked(intent, context);
         }
     }
 

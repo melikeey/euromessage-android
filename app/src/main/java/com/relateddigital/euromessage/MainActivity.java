@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         euroMobileManager = EuroMobileManager.init(APP_ALIAS, this);
 
-        EuroMobileManager.getManager().setNotificationClickHandler(new ExampleEuroMobileNotificationHandler());
+        EuroMobileManager.getManager().setNotificationClickHandler(new ExampleNotificationHandler());
     }
 
     private void setUI() {
