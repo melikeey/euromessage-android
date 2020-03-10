@@ -8,7 +8,6 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        NotificationEventProcessor.processor(intent, context);
+         NotificationEventProcessor.processor(intent, context);
     }
 }

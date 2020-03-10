@@ -9,7 +9,7 @@ import euromsg.com.euromobileandroid.notification.EuroMobileNotificationHandler;
 public class ExampleEuroMobileNotificationHandler implements EuroMobileNotificationHandler {
 
     @Override
-    public void onNotificationOpened(Intent intent) {
+    public void onNotificationClicked(Intent intent) {
 
         switch (EuroMobileManager.getEvent(intent)) {
 

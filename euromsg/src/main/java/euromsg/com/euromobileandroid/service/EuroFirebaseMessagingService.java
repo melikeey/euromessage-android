@@ -17,7 +17,7 @@ public class EuroFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String token) {
         try {
             EuroLogger.debugLog("On new token : " + token);
-            EuroMobileManager.getInstance().subscribe(token, this);
+            EuroMobileManager.getManager().subscribe(token, this);
         } catch (Exception e) {
             EuroLogger.debugLog(e.toString());
             EuroLogger.debugLog("Failed to complete token refresh");
@@ -29,6 +29,5 @@ public class EuroFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         MessagingProcessor.processRemoteMessage(remoteMessage, this);
-
     }
 }

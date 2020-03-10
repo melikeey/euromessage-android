@@ -49,18 +49,19 @@ public class EuroMobileManager {
      *
      * @param appAlias Application key from Euromsg. Euromsg will give you this key.
      */
-    public static EuroMobileManager createInstance(String appAlias, Context context) {
+    public static EuroMobileManager init(String appAlias, Context context) {
 
         if (instance == null) {
             instance = new EuroMobileManager(appAlias);
         }
         EuroLogger.debugLog("SharedManager App Key : " + instance.subscription.getAppAlias());
         SharedPreference.saveString(context, Constants.APP_ALIAS, instance.subscription.getAppAlias());
+        FirebaseApp.initializeApp(context);
 
         return instance;
     }
 
-    public static EuroMobileManager getInstance() {
+    public static EuroMobileManager getManager() {
         return instance;
     }
 
@@ -117,7 +118,7 @@ public class EuroMobileManager {
      *
      * @param context Application context
      */
-    public void registerToFCM(Context context) {
+    public static void registerToFCM(Context context) {
         FirebaseApp.initializeApp(context);
     }
 
@@ -158,7 +159,7 @@ public class EuroMobileManager {
         }
     }
 
-    public void setNotificationOpenHandler(EuroMobileNotificationHandler euroMobileNotificationHandler) {
+    public void setNotificationClickHandler(EuroMobileNotificationHandler euroMobileNotificationHandler) {
         this.euroMobileNotificationHandler = euroMobileNotificationHandler;
 
     }

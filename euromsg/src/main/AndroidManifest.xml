@@ -6,6 +6,5 @@
 
     <application>
         <receiver android:name="euromsg.com.euromobileandroid.notification.NotificationEventReceiver" android:exported="true" android:enabled="true"/>
-
     </application>
 </manifest>

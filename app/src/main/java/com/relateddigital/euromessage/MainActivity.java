@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static EuroMobileManager euroMobileManager;
 
-    public static String APP_ALIAS =  Constants.APP_ALIAS;
+    public static String APP_ALIAS = Constants.APP_ALIAS;
 
     ActivityMainBinding mainBinding;
 
@@ -61,12 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void initializeEuroMessage() {
 
-        euroMobileManager = EuroMobileManager.createInstance(APP_ALIAS, this);
+        euroMobileManager = EuroMobileManager.init(APP_ALIAS, this);
 
-        euroMobileManager.registerToFCM(getBaseContext());
-
-        euroMobileManager.setNotificationOpenHandler(new ExampleEuroMobileNotificationHandler());
-
+        EuroMobileManager.getManager().setNotificationClickHandler(new ExampleEuroMobileNotificationHandler());
     }
 
     private void setUI() {

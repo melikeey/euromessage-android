@@ -46,6 +46,6 @@ public class MessagingProcessor {
 
         String appAlias = SharedPreference.getString(context, Constants.APP_ALIAS);
 
-        EuroMobileManager.createInstance(appAlias, context).reportReceived(pushMessage.getPushId());
+        EuroMobileManager.init(appAlias, context).reportReceived(pushMessage.getPushId());
     }
 }

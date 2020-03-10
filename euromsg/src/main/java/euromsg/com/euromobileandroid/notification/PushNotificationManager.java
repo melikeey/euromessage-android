@@ -48,7 +48,9 @@ public class PushNotificationManager {
 
                 mBuilder = createNotificationBuilder(null, pushMessage, context);
 
-                notificationManager.notify(12, mBuilder.build());
+                if (notificationManager != null) {
+                    notificationManager.notify(12, mBuilder.build());
+                }
 
                 break;
 
@@ -58,14 +60,18 @@ public class PushNotificationManager {
 
                 mBuilder = createNotificationBuilder(image, pushMessage, context);
 
-                notificationManager.notify(12, mBuilder.build());
+                if (notificationManager != null) {
+                    notificationManager.notify(12, mBuilder.build());
+                }
 
                 break;
 
             case Action:
 
                 mBuilder = createActionNotificationBuilder(pushMessage, context);
-                notificationManager.notify(1, mBuilder.build());
+                if (notificationManager != null) {
+                    notificationManager.notify(1, mBuilder.build());
+                }
 
                 break;
 

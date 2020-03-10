@@ -5,5 +5,5 @@ import android.os.Bundle;
 
 public interface EuroMobileNotificationHandler {
 
-    void onNotificationOpened(Intent intent);
+    void onNotificationClicked(Intent intent);
 }
