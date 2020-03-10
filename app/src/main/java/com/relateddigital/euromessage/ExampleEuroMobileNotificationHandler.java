@@ -14,27 +14,27 @@ public class ExampleEuroMobileNotificationHandler implements EuroMobileNotificat
         switch (EuroMobileManager.getEvent(intent)) {
 
             case ACTION_MID:
-                Log.e("mid action", "mid");
+                Log.e("Mid action", "mid");
 
                 break;
 
             case ACTION_LEFT:
-                Log.e("left action", "left");
+                Log.e("Left action", "left");
 
                 break;
 
             case ACTION_RIGHT:
-                Log.e("right action", "right");
+                Log.e("Right action", "right");
                 break;
 
 
             case CAROUSEL_LEFT_ITEM:
-                Log.e("carousel", "left");
+                Log.e("Carousel", "Left");
 
                 break;
 
             case CAROUSEL_RIGHT_ITEM:
-                Log.e("Carouse", "right");
+                Log.e("Carousel", "Right");
 
                 break;
         }

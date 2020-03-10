@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.relateddigital.euromessage.databinding.ActivityMainBinding;
 
 import euromsg.com.euromobileandroid.EuroMobileManager;
-import euromsg.com.euromobileandroid.connection.ConnectionManager;
 import euromsg.com.euromobileandroid.enums.PushType;
 import euromsg.com.euromobileandroid.model.Message;
 import euromsg.com.euromobileandroid.notification.PushNotificationManager;

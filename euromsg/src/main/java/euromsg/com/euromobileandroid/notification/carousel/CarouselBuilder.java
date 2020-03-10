@@ -276,7 +276,7 @@ public class CarouselBuilder {
             NotificationManager mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 
-            mBuilder = PushNotificationManager.createCarouselNotificationBuilder(contentTitle, contentText);
+            mBuilder = PushNotificationManager.createCarouselNotificationBuilder(contentTitle, contentText, context);
 
             if (isOtherRegionClickable) {
                 setOtherRegionClickable();

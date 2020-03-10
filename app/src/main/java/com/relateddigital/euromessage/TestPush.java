@@ -70,13 +70,13 @@ public class TestPush {
             "    \"title\": \"Dikkat\",\n" +
             "    \"actionElements\": [{\n" +
             "            \"id\": \"1\",\n" +
-            "            \"buttonTitle\": \"Tamam\"\n" +
+            "            \"buttonTitle\": \"Tamamlama\"\n" +
             "        }, {\n" +
             "             \"id\": \"2\",\n" +
-            "            \"buttonTitle\": \"Şimdilik İstemiyorum\"\n" +
+            "            \"buttonTitle\": \"Bitirmelik\"\n" +
             "        }, {\n" +
         "             \"id\": \"3\",\n" +
-                "            \"buttonTitle\": \"Başka Ürünler Ekle\"\n" +
+                "            \"buttonTitle\": \"Yoketmelik\"\n" +
                 "        }\n" +
             "    ]\n" +
             "}";
