@@ -13,7 +13,7 @@ import euromsg.com.euromobileandroid.notification.carousel.CarouselBuilder;
 public class NotificationEventProcessor {
 
 
-    public void processor(Intent intent, Context context) {
+    void processor(Intent intent, Context context) {
 
         if (isCarousel(intent)) {
 
@@ -27,7 +27,6 @@ public class NotificationEventProcessor {
             EuroMobileManager.getEuroMobileNotificationHandler().onNotificationClicked(intent, context);
         }
     }
-
 
     private boolean isCarousel(Intent intent) {
 
