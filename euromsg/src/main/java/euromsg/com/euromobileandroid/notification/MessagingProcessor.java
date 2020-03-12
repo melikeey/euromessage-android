@@ -13,7 +13,7 @@ import euromsg.com.euromobileandroid.utils.SharedPreference;
 
 public class MessagingProcessor {
 
-    static String title = "{\n" +
+         String title = "{\n" +
             "    \"pushType\": \"Action\",\n" +
             "    \"url\": \"http://www.google.com.tr\",\n" +
             "    \"mediaUrl\": \"\",\n" +
@@ -33,7 +33,7 @@ public class MessagingProcessor {
             "}";
 
 
-    public static void processRemoteMessage(RemoteMessage remoteMessage, Context context) {
+    public void processRemoteMessage(RemoteMessage remoteMessage, Context context) {
 
         //  Map<String, String> remoteMessageData = remoteMessage.getData();
         //  Message pushMessage = new Message(remoteMessageData);
@@ -42,7 +42,8 @@ public class MessagingProcessor {
 
         EuroLogger.debugLog("Message received : " + pushMessage.getMessage());
 
-        PushNotificationManager.generateNotification(context, pushMessage, pushMessage.getPushType());
+        PushNotificationManager pushNotificationManager = new PushNotificationManager(context);
+        pushNotificationManager.generateNotification(pushMessage, pushMessage.getPushType());
 
         String appAlias = SharedPreference.getString(context, Constants.APP_ALIAS);
 

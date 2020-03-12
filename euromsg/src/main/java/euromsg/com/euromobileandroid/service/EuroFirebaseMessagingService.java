@@ -28,6 +28,6 @@ public class EuroFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        MessagingProcessor.processRemoteMessage(remoteMessage, this);
+        new MessagingProcessor().processRemoteMessage(remoteMessage, this);
     }
 }

@@ -128,11 +128,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendATemplateTestPush() {
 
+        final PushNotificationManager pushNotificationManager = new PushNotificationManager(getApplicationContext());
+
         mainBinding.btnText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Message message = new Gson().fromJson(TestPush.testText, Message.class);
-                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Text);
+                pushNotificationManager.generateNotification(message, PushType.Text);
             }
         });
 
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Message message = new Gson().fromJson(TestPush.testImage, Message.class);
-                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Image);
+                pushNotificationManager.generateNotification(message, PushType.Image);
             }
         });
 
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Message message = new Gson().fromJson(TestPush.testCarousel, Message.class);
-                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Carousel);
+                pushNotificationManager.generateNotification( message, PushType.Carousel);
 
             }
         });
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Message message = new Gson().fromJson(TestPush.testAction, Message.class);
-                PushNotificationManager.generateNotification(getApplicationContext(), message, PushType.Action);
+                pushNotificationManager.generateNotification(message, PushType.Action);
             }
         });
     }

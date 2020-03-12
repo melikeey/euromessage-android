@@ -10,10 +10,10 @@ import euromsg.com.euromobileandroid.EuroMobileManager;
 import euromsg.com.euromobileandroid.model.CarouselSetUp;
 import euromsg.com.euromobileandroid.notification.carousel.CarouselBuilder;
 
-class NotificationEventProcessor {
+public class NotificationEventProcessor {
 
 
-    static void processor(Intent intent, Context context) {
+    public void processor(Intent intent, Context context) {
 
         if (isCarousel(intent)) {
 
@@ -29,7 +29,7 @@ class NotificationEventProcessor {
     }
 
 
-    private static boolean isCarousel(Intent intent) {
+    private boolean isCarousel(Intent intent) {
 
         if (intent.getExtras().getInt(Constants.ITEM_CLICKED) == Constants.EVENT_LEFT_ITEM_CLICKED || intent.getExtras().getInt(Constants.ITEM_CLICKED) == Constants.EVENT_RIGHT_ARROW_CLICKED) {
 
@@ -38,7 +38,7 @@ class NotificationEventProcessor {
         return false;
     }
 
-    private static void handleCarouselClick(Intent intent, Context context) {
+    private void handleCarouselClick(Intent intent, Context context) {
 
         int afterThisNumberIsNotCarouselArrow = 2;
 
@@ -54,7 +54,7 @@ class NotificationEventProcessor {
     }
 
 
-    private static void closeNotificationFromActionButtonClick(Context context) {
+    private void closeNotificationFromActionButtonClick(Context context) {
 
         context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

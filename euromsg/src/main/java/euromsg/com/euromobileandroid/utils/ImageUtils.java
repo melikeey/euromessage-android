@@ -10,6 +10,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import androidx.core.app.NotificationCompat;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -115,5 +117,18 @@ public class ImageUtils {
         }
 
         return appIconResId;
+    }
+
+    public static Bitmap getAppIconAsBitmap(Context context){
+
+      return  BitmapFactory.decodeResource(context.getResources(), ImageUtils.getAppIcon(context));
+    }
+
+    public static NotificationCompat.Style getNotificationImageStyle(Bitmap pushImage, String message) {
+        NotificationCompat.Style style = pushImage == null ?
+                new NotificationCompat.BigTextStyle().bigText(message) :
+                new NotificationCompat.BigPictureStyle().bigPicture(pushImage).setSummaryText(message);
+
+        return style;
     }
 }
