@@ -19,7 +19,7 @@ import androidx.core.app.NotificationCompat;
 import java.util.ArrayList;
 
 import euromsg.com.euromobileandroid.Constants;
-import euromsg.com.euromobileandroid.notification.EuroMessageNotificationBuilder;
+import euromsg.com.euromobileandroid.notification.EuroMobileNotificationBuilder;
 import euromsg.com.euromobileandroid.notification.NotificationEventReceiver;
 import euromsg.com.euromobileandroid.R;
 import euromsg.com.euromobileandroid.connection.ImageDownloaderManager;
@@ -275,8 +275,8 @@ public class CarouselBuilder {
 
             NotificationManager mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            EuroMessageNotificationBuilder euroMessageNotificationBuilder = new EuroMessageNotificationBuilder(context);
-            mBuilder = euroMessageNotificationBuilder.getCarouselNotificationBuilder(contentTitle, contentText, context);
+            EuroMobileNotificationBuilder euroMobileNotificationBuilder = new EuroMobileNotificationBuilder(context);
+            mBuilder = euroMobileNotificationBuilder.getCarouselNotificationBuilder(contentTitle, contentText, context);
 
             if (isOtherRegionClickable) {
                 setOtherRegionClickable();

@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         notificationManager = NotificationManagerCompat.from(this);
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         checkTokenStatus();
 
         sync();
-
     }
 
     private void sync() {

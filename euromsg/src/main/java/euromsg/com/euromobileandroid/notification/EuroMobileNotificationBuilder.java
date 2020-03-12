@@ -20,11 +20,11 @@ import euromsg.com.euromobileandroid.model.Message;
 import euromsg.com.euromobileandroid.utils.AppUtils;
 import euromsg.com.euromobileandroid.utils.ImageUtils;
 
-public class EuroMessageNotificationBuilder {
+public class EuroMobileNotificationBuilder {
 
     private NotificationCompat.Builder notificationBuilder;
 
-    public EuroMessageNotificationBuilder(Context context) {
+    public EuroMobileNotificationBuilder(Context context) {
 
         String channelId = "euroChannel";
         notificationBuilder = new NotificationCompat.Builder(context, channelId);

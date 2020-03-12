@@ -24,7 +24,7 @@ import euromsg.com.euromobileandroid.utils.AppUtils;
 
 public class PushNotificationManager {
 
-    private EuroMessageNotificationBuilder euroMessageNotificationBuilder;
+    private EuroMobileNotificationBuilder euroMobileNotificationBuilder;
 
     private Context context;
 
@@ -32,7 +32,7 @@ public class PushNotificationManager {
 
     public PushNotificationManager(Context context) {
         this.context = context;
-        euroMessageNotificationBuilder = new EuroMessageNotificationBuilder(context);
+        euroMobileNotificationBuilder = new EuroMobileNotificationBuilder(context);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
@@ -45,7 +45,7 @@ public class PushNotificationManager {
         switch (pushType) {
             case Text:
 
-                notificationBuilder = euroMessageNotificationBuilder.getStandardNotificationBuilder(null, pushMessage, context);
+                notificationBuilder = euroMobileNotificationBuilder.getStandardNotificationBuilder(null, pushMessage, context);
 
                 notificationManager.notify(12, notificationBuilder.build());
 
@@ -55,7 +55,7 @@ public class PushNotificationManager {
 
                 Bitmap image = ConnectionManager.getInstance().getBitMapFromUri(pushMessage.getMediaUrl());
 
-                notificationBuilder = euroMessageNotificationBuilder.getStandardNotificationBuilder(image, pushMessage, context);
+                notificationBuilder = euroMobileNotificationBuilder.getStandardNotificationBuilder(image, pushMessage, context);
 
                 if (notificationManager != null) {
                     notificationManager.notify(12, notificationBuilder.build());
@@ -65,7 +65,7 @@ public class PushNotificationManager {
 
             case Action:
 
-                notificationBuilder = euroMessageNotificationBuilder.getActionNotificationBuilder(pushMessage, context);
+                notificationBuilder = euroMobileNotificationBuilder.getActionNotificationBuilder(pushMessage, context);
                 if (notificationManager != null) {
                     notificationManager.notify(1, notificationBuilder.build());
                 }
