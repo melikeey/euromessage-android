@@ -20,17 +20,17 @@ import euromsg.com.euromobileandroid.model.Message;
 import euromsg.com.euromobileandroid.utils.AppUtils;
 import euromsg.com.euromobileandroid.utils.ImageUtils;
 
-public class NotificationBuilder {
+public class EuroMessageNotificationBuilder {
 
     private NotificationCompat.Builder notificationBuilder;
 
-    public NotificationBuilder(Context context) {
+    public EuroMessageNotificationBuilder(Context context) {
 
         String channelId = "euroChannel";
         notificationBuilder = new NotificationCompat.Builder(context, channelId);
     }
 
-    NotificationCompat.Builder createStandardNotificationBuilder(Bitmap pushImage, Message pushMessage, Context context) {
+    NotificationCompat.Builder getStandardNotificationBuilder(Bitmap pushImage, Message pushMessage, Context context) {
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -51,7 +51,7 @@ public class NotificationBuilder {
     }
 
 
-    public NotificationCompat.Builder createCarouselNotificationBuilder(String contentTitle, String contentText, Context context) {
+    public NotificationCompat.Builder getCarouselNotificationBuilder(String contentTitle, String contentText, Context context) {
 
         notificationBuilder.setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -63,7 +63,7 @@ public class NotificationBuilder {
         return notificationBuilder;
     }
 
-    NotificationCompat.Builder createActionNotificationBuilder(Message message, Context context) {
+    NotificationCompat.Builder getActionNotificationBuilder(Message message, Context context) {
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, AppUtils.getLaunchIntent(context, null), PendingIntent.FLAG_UPDATE_CURRENT);
 

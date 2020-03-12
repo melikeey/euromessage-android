@@ -6,6 +6,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -18,32 +20,34 @@ import euromsg.com.euromobileandroid.notification.carousel.CarouselBuilder;
 import euromsg.com.euromobileandroid.model.CarouselItem;
 import euromsg.com.euromobileandroid.model.Element;
 import euromsg.com.euromobileandroid.model.Message;
+import euromsg.com.euromobileandroid.utils.AppUtils;
 
 public class PushNotificationManager {
 
-    private NotificationBuilder notificationBuilder;
+    private EuroMessageNotificationBuilder euroMessageNotificationBuilder;
 
     private Context context;
 
+    private NotificationManager notificationManager;
+
     public PushNotificationManager(Context context) {
-         notificationBuilder = new NotificationBuilder(context);
-         this.context = context;
+        this.context = context;
+        euroMessageNotificationBuilder = new EuroMessageNotificationBuilder(context);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     public void generateNotification(Message pushMessage, PushType pushType) {
 
-        NotificationCompat.Builder mBuilder;
+        NotificationCompat.Builder notificationBuilder;
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        createNotificationChannel(notificationManager);
+        createNotificationChannel(pushMessage.getSound());
 
         switch (pushType) {
             case Text:
 
-                mBuilder = notificationBuilder.createStandardNotificationBuilder(null, pushMessage, context);
+                notificationBuilder = euroMessageNotificationBuilder.getStandardNotificationBuilder(null, pushMessage, context);
 
-                notificationManager.notify(12, mBuilder.build());
+                notificationManager.notify(12, notificationBuilder.build());
 
                 break;
 
@@ -51,19 +55,19 @@ public class PushNotificationManager {
 
                 Bitmap image = ConnectionManager.getInstance().getBitMapFromUri(pushMessage.getMediaUrl());
 
-                mBuilder = notificationBuilder.createStandardNotificationBuilder(image, pushMessage, context);
+                notificationBuilder = euroMessageNotificationBuilder.getStandardNotificationBuilder(image, pushMessage, context);
 
                 if (notificationManager != null) {
-                    notificationManager.notify(12, mBuilder.build());
+                    notificationManager.notify(12, notificationBuilder.build());
                 }
 
                 break;
 
             case Action:
 
-                mBuilder = notificationBuilder.createActionNotificationBuilder(pushMessage, context);
+                notificationBuilder = euroMessageNotificationBuilder.getActionNotificationBuilder(pushMessage, context);
                 if (notificationManager != null) {
-                    notificationManager.notify(1, mBuilder.build());
+                    notificationManager.notify(1, notificationBuilder.build());
                 }
 
                 break;
@@ -87,7 +91,7 @@ public class PushNotificationManager {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    private static void createNotificationChannel(NotificationManager notificationManager) {
+    private void createNotificationChannel(String sound) {
 
         String channelId = "euroChannel";
 
@@ -104,8 +108,14 @@ public class PushNotificationManager {
             notificationChannel.enableVibration(true);
             notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
 
+            if (sound != null) {
+                Uri soundUri = AppUtils.getSound(context, sound);
+                AudioAttributes attributes = new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION).build();
+                notificationChannel.setSound(soundUri, attributes);
+            }
+
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
-
 }
